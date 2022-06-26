@@ -139,7 +139,7 @@ const getAllUsers = async (req, res) => {
         if (!users) {
             return res.status(400).send('No users');
         }
-        return res.json(users).send("Users found");
+        return res.json(users);
     } catch (error) {
         console.log(error)
     }

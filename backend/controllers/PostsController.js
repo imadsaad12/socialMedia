@@ -36,8 +36,7 @@ const getPost = async (req, res) => {
             return res.status(404).send("User not found")
         if (!post)
             return res.status(404).send("post not available")
-
-        if (mongoose.Types.ObjectId(user._id) !== mongoose.Types.ObjectId(post._id))
+        if (user._id.toString() !== post.userId.toString())
             return res.status(400).send("Unauthenticated Access")
         return res.status(200).json(post)
     } catch (error) {
@@ -54,7 +53,7 @@ const updatePost = async (req, res) => {
             return res.status(404).send("User not found")
         if (!post)
             return res.status(404).send("post not available")
-        if (post.userId.toString !== user._id.toString)
+        if (user._id.toString() !== post.userId.toString())
             return res.status(400).send("Unauthenticated Access")
 
         // await Posts.findByIdAndUpdate(post._id, req.body)
@@ -76,7 +75,7 @@ const deletePost = async (req, res) => {
             return res.status(404).send("User not found")
         if (!post)
             return res.status(404).send("post not available")
-        if (post.userId.toString != user._id.toString)
+        if (user._id.toString() !== post.userId.toString())
             return res.status(400).send("Unauthenticated Access")
         await post.deleteOne()
         return res.status(200).send("Delete success")
@@ -107,7 +106,6 @@ const likePost = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
-    //update post in user
 }
 
 //unlike post
@@ -121,7 +119,7 @@ const unlikePost = async (req, res) => {
         if (!post)
             return res.status(404).send("post not available")
 
-        if (!post.UsersLike || !post.UsersLike.includes(currentU._id)){
+        if (!post.UsersLike || !post.UsersLike.includes(currentU._id)) {
             return res.status(400).send("Already unliked post")
         }
         const newLikes = post.number_of_Likes - 1
@@ -140,7 +138,7 @@ const getAllPosts = async (req, res) => {
         if (!posts) {
             return res.status(400).send('No users');
         }
-        return res.json(posts).send("Users found");
+        return res.json(posts);
     } catch (error) {
         console.log(error)
     }
