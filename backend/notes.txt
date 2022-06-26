@@ -1,0 +1,32 @@
+profile:
+    fullname:{
+        firstname,
+        lastname,
+    },
+    username:{
+        unique:true
+    }
+    email,
+    password,
+    birthday,
+    profile_Image:google string,
+    Addres,
+    phone_Number,
+    posts:[
+        text,
+        date_of_post,
+        number_of_Likes,
+    ],
+    friends:[
+        {
+            username:string
+        }
+    ]
+    school,
+    work,
+
+
+databse link=mongodb+srv://mydb:93928@cluster0.g0he0.mongodb.net/project?retryWrites=true&w=majority
+
+
+
