@@ -24,5 +24,5 @@ mongoose
     });
 
 //routes
-app.use("/", userRoute);
-app.use("/", postRoute);
+app.use("/users", userRoute);
+app.use("/posts", postRoute);

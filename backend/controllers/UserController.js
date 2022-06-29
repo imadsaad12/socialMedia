@@ -68,10 +68,37 @@ const getUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
+        const myPosts = await Posts.find({ userId: req.params.id })
+        if(myPosts){
+            await Posts.deleteMany({userId:req.params.id}, function(err) {})
+        }
+
         const user = await User.findById(req.params.id)
         if (!user)
             return res.status(404).send("Account not found")
+        userFriends = user.friends
 
+        for (const friendId of userFriends) {
+            // console.log(friendId);
+            await User.findByIdAndUpdate(friendId, { $pull: { friends: req.params.id } })
+
+            postsFriend = await Posts.find({ userId: friendId })
+
+
+            for (const post of postsFriend) {
+                likeFriends = post.UsersLike
+                
+                for (const likeId of likeFriends) {
+                    if (likeId == req.params.id) {
+                        console.log(likeId + " : " + post._id)
+                        postLikes = post.number_of_Likes - 1
+                        await Posts.findByIdAndUpdate(post._id, {
+                            $pull: { UsersLike: likeId }, number_of_Likes : postLikes 
+                        })
+                    }
+                }
+            }
+        }
         await User.findByIdAndDelete(req.params.id)
         return res.status(200).send("Account deleted successfully")
     } catch (error) {
@@ -96,11 +123,11 @@ const updateUser = async (req, res) => {
 
 const userBefriend = async (req, res) => {
 
-    if (req.params.id === req.body._id)
+    if (req.query.id === req.query.id2)
         return res.status(500).send("You cannot befriend yourself")
 
-    const user_2 = await User.findById(req.params.id)
-    const currentUser = await User.findById(req.body._id)
+    const user_2 = await User.findById(req.query.id)
+    const currentUser = await User.findById(req.query.id2)
 
     try {
         if (currentUser.friends.includes(user_2._id))
@@ -119,11 +146,11 @@ const userBefriend = async (req, res) => {
 }
 
 const userUnfriend = async (req, res) => {
-    if (req.params.id === req.body._id)
+    if (req.query.id === req.query.id2)
         return res.status(500).send("You cannot Unfriend yourself")
 
-    const user_2 = await User.findById(req.params.id)
-    const currentUser = await User.findById(req.body._id)
+    const user_2 = await User.findById(req.query.id)
+    const currentUser = await User.findById(req.query.id2)
 
     if (!currentUser.friends.includes(user_2._id))
         return res.status(500).send("Already not friends")

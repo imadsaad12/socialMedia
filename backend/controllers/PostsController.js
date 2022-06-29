@@ -30,13 +30,13 @@ const addPost = async (req, res) => {
 const getPost = async (req, res) => {
     try {
         const post = await Posts.findById(req.params.id)
-        const user = await Users.findById(req.body._id)
-        if (!user)
-            return res.status(404).send("User not found")
+        // const user = await Users.findById(req.body._id)
+        // if (!user)
+        //     return res.status(404).send("User not found")
         if (!post)
             return res.status(404).send("post not available")
-        if (user._id.toString() !== post.userId.toString())
-            return res.status(400).send("Unauthenticated Access")
+        // if (user._id.toString() !== post.userId.toString())
+        //     return res.status(400).send("Unauthenticated Access")
         return res.status(200).json(post)
     } catch (error) {
         console.log(error)
@@ -46,8 +46,8 @@ const getPost = async (req, res) => {
 //update post
 const updatePost = async (req, res) => {
     try {
-        const post = await Posts.findById(req.body._id)
-        const user = await Users.findById(req.params.id)
+        const post = await Posts.findById(req.params.id)
+        const user = await Users.findById(req.query.user)
         if (!user)
             return res.status(404).send("User not found")
         if (!post)
@@ -68,8 +68,8 @@ const updatePost = async (req, res) => {
 //delete post
 const deletePost = async (req, res) => {
     try {
-        const post = await Posts.findById(req.body._id)
-        const user = await Users.findById(req.params.id)
+        const post = await Posts.findById(req.params.id)
+        const user = await Users.findById(req.query.user)
         if (!user)
             return res.status(404).send("User not found")
         if (!post)
@@ -87,8 +87,8 @@ const deletePost = async (req, res) => {
 //like post
 const likePost = async (req, res) => {
     try {
-        const post = await Posts.findById(req.body._id)
-        const currentU = await Users.findById(req.params.id)
+        const post = await Posts.findById(req.query.post)
+        const currentU = await Users.findById(req.query.user)
 
         if (!currentU)
             return res.status(404).send("User not found")
@@ -110,8 +110,8 @@ const likePost = async (req, res) => {
 //unlike post
 const unlikePost = async (req, res) => {
     try {
-        const post = await Posts.findById(req.body._id)
-        const currentU = await Users.findById(req.params.id)
+        const post = await Posts.findById(req.query.post)
+        const currentU = await Users.findById(req.query.user)
 
         if (!currentU)
             return res.status(404).send("User not found")
